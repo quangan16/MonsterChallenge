@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public bool isMoving = false;
-    private float playerSpeed = 10.0f;
+    private float moveSpeed = 10.0f;
     public Vector3 moveDirection;
-    private float rotationSpeed = 5000.0f;
+    private float rotationSpeed = 500.0f;
     private float upRotationBound = 70.0f;
     private float downRotationBound = -70.0f;
     private bool isJumping = false;
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
         if (moveDirection != Vector3.zero)
         {
             isMoving = true;
-            Vector3 newMoveDirection = cameraHolder.transform.TransformDirection(moveDirection * playerSpeed);
+            Vector3 newMoveDirection = cameraHolder.transform.TransformDirection(moveDirection * moveSpeed);
             newMoveDirection.y = 0.0f;
             playerRb.velocity = newMoveDirection;
         }
@@ -51,25 +51,25 @@ public class PlayerController : MonoBehaviour
 
     public void LookAround()
     {
-        cameraHolder.transform.Rotate(Vector3.up * InputManager.Instance.GetNormalizedRotationDirection().x);
-        float newRotationY = cameraHolder.transform.eulerAngles.y -
-                             InputManager.Instance.GetNormalizedRotationDirection().x;
+        // cameraHolder.transform.Rotate(Vector3.up * InputManager.Instance.GetNormalizedRotationDirection().x);
+        float newRotationY = cameraHolder.transform.eulerAngles.y +
+                             InputManager.Instance.GetNormalizedRotationDirection().x ;
 
         float newRotationX = cameraHolder.transform.eulerAngles.x -
-                             InputManager.Instance.GetNormalizedRotationDirection().y;
+                             InputManager.Instance.GetNormalizedRotationDirection().y ;
 
         newRotationX = (newRotationX % 360 + 360) % 360;
         if (newRotationX > 180)
         {
             newRotationX -= 360;
         }
-        // Calculate the clamped rotation
+    
         newRotationX = Mathf.Clamp(newRotationX, downRotationBound, upRotationBound);
-        Debug.Log(cameraHolder.transform.eulerAngles.x);
+        Quaternion targetRotation = Quaternion.Euler(newRotationX, newRotationY, 0);
 
         // Apply the clamped rotation
-        cameraHolder.transform.eulerAngles = new Vector3(newRotationX, cameraHolder.transform.eulerAngles.y, 0.0f);
-        
+        cameraHolder.transform.rotation =
+            Quaternion.Slerp(cameraHolder.transform.rotation, targetRotation, 0.5f * rotationSpeed * Time.deltaTime);
     }
 
     public void Jump()

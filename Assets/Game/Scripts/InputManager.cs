@@ -34,24 +34,15 @@ public class InputManager : MonoBehaviour
     public Vector2 GetNormalizedRotationDirection()
     {
        
-        if (Input.touchCount == 1  && virtualJoystick.IsDragging == false)
+        if (Input.touchCount == 1  && virtualJoystick.IsDragging == false )
         {
             Touch touch = Input.GetTouch(0);
 
-            if (touch.phase == TouchPhase.Began)
+            if (touch.phase == TouchPhase.Moved && touch.position.x > Screen.width * 0.5f)
             {
-                touchStartPos = touch.position;
-            }
-            else if (touch.phase == TouchPhase.Moved)
-            {
-                touchEndPos = touch.position;
-                float deltaX = (touchEndPos.x - touchStartPos.x) ;
-                float deltaY = (touchEndPos.y - touchStartPos.y);
-                return new Vector2(deltaX, deltaY);
+                return touch.deltaPosition.normalized;
             }
         }
-
-        touchStartPos = touchEndPos;
         return Vector2.zero;
     }
     
