@@ -31,7 +31,7 @@ public class InputManager : MonoBehaviour
         
     }
 
-    public Vector2 GetNormalizedRotation()
+    public Vector2 GetNormalizedRotationDirection()
     {
        
         if (Input.touchCount == 1  && virtualJoystick.IsDragging == false)
