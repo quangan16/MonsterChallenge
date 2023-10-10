@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -9,9 +10,13 @@ public class Door : MonoBehaviour
     public int doorID;
     public float doorHeight;
     public bool isOpening;
-    private Tween openTween;
     private Vector3 defaultPos;
-    
+
+    private void OnDisable()
+    {
+        transform.DOKill();
+    }
+
     public void Start()
     {
         isOpening = false;
@@ -23,8 +28,11 @@ public class Door : MonoBehaviour
     {
         if (!isOpening)
         {
-            openTween = transform.DOLocalMoveY(doorHeight, 1.0f);
-            isOpening = true;
+            transform.DOLocalMoveY(doorHeight, 1.0f).OnComplete(() =>
+            {
+                isOpening = true;
+            });
+           
         }
     }
 
@@ -33,8 +41,11 @@ public class Door : MonoBehaviour
     {
         if (isOpening)
         {
-            openTween = transform.DOLocalMoveY(defaultPos.y, 1.0f);
-            isOpening = false;
+            transform.DOLocalMoveY(defaultPos.y, 1.0f).OnComplete(() =>
+            {
+                isOpening = false;
+            });
+          
         }
     }
     

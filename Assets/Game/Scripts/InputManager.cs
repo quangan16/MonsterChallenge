@@ -40,7 +40,7 @@ public class InputManager : MonoBehaviour
 
             if (touch.phase == TouchPhase.Moved && touch.position.x > Screen.width * 0.5f)
             {
-                return touch.deltaPosition.normalized;
+                return touch.deltaPosition;
             }
         }
         return Vector2.zero;

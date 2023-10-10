@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Game.Scripts
+
+public class GameManager : MonoBehaviour
 {
-    public class GameManager : MonoBehaviour
+    void Start()
     {
-        
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0;
     }
+        
 }

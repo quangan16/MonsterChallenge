@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorButton : MonoBehaviour
+public class DoorButton : MonoBehaviour, IInteractable
 {
     [SerializeField] private Door connectedDoor;
 
@@ -15,5 +15,17 @@ public class DoorButton : MonoBehaviour
     {
         connectedDoor.Close();
         
+    }
+
+    public void Interact()
+    {
+        if (connectedDoor.isOpening)
+        {
+            CloseDoor();
+        }
+        else
+        {
+            OpenDoor();
+        }
     }
 }
