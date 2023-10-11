@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    
+   
     public bool isMoving = false;
-    private float moveSpeed = 3.0f;
+    private float normalSpeed = 3.0f;
     private float sprintSpeed = 5.0f;
     public Vector3 moveDirection;
     private float rotationSpeed = 5.0f;
@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour
     private float downRotationBound = -70.0f;
     private bool isSprinting = false;
     private float jumpHeight = 2.0f; // Jump height in meters
-    private float gravity = -9.81f;
-
+    private float gravity = -9.8f;
+   
     [SerializeField] private GameObject cameraHolder;
     [SerializeField] private Rigidbody playerRb;
 
@@ -26,13 +26,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController characterCtl;
     public float verticalVelocity;
 
-    private float maxInteractDistance = 1.0f;
+    private float maxInteractDistance = 2.0f;
+    private float maxInteractRadius = 0.6f;
     private LayerMask interactableLayer = 1 << 7;
-    
-    
+
+    private float sprintDuration = 3.0f;
+
+    [SerializeField] IInteractable interactableObj;
+    public List<ICollectable> itemList;
     public void Awake()
     {
-        jumpButton.onClick.AddListener(Jump);
+        // jumpButton.onClick.AddListener(Jump);
     }
 
     public void Start()
@@ -45,11 +49,7 @@ public class PlayerController : MonoBehaviour
         Move();
         LookAround();
         ApplyGravity();
-        Debug.Log(characterCtl.isGrounded);
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Interact();
-        }
+        CheckInteract();
     }
 
   
@@ -57,14 +57,14 @@ public class PlayerController : MonoBehaviour
 
     public void Move()
     {
-        float currentSpeed = (isSprinting) ? moveSpeed : sprintSpeed;
+        float currentSpeed = (isSprinting) ? sprintSpeed : normalSpeed;
         moveDirection = new Vector3(InputManager.Instance.GetNormalizedMoveDirection().x, 0.0f,
             InputManager.Instance.GetNormalizedMoveDirection().y);
             isMoving = true;
-            Vector3 newMoveDirection = cameraHolder.transform.TransformDirection(moveDirection * moveSpeed) ;
+            Vector3 newMoveDirection = cameraHolder.transform.TransformDirection(moveDirection) ;
            
             // playerRb.velocity = new Vector3(newMoveDirection.x, playerRb.velocity.y, newMoveDirection.z) ;
-            characterCtl.Move((newMoveDirection * moveSpeed * Time.deltaTime) + (new Vector3(0, verticalVelocity, 0) * Time.deltaTime) );
+            characterCtl.Move((newMoveDirection * currentSpeed * Time.deltaTime) + (new Vector3(0, verticalVelocity, 0) * Time.deltaTime) );
     }
     
     public void LookAround()
@@ -122,26 +122,52 @@ public class PlayerController : MonoBehaviour
             Debug.Log(verticalVelocity);
         }
     }
-    
-    public void Interact()
+
+    public void SprintOn()
     {
-        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        
-        if(Physics.Raycast(ray, out RaycastHit hit, maxInteractDistance, interactableLayer))
+        if (isSprinting == false)
         {
-            IInteractable interactableObj = hit.collider.GetComponent(typeof(IInteractable)) as IInteractable;
-            if (interactableObj != null)
-            {
-                interactableObj.Interact();
-            }
+            isSprinting = true;
+        }
+        Invoke(nameof(SprintOff), sprintDuration);
+    }
+
+    public void SprintOff()
+    {
+        if (isSprinting)
+        {
+            isSprinting = false;
+        }
+    }
+    
+    public void CheckInteract()
+    {
+     Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        
+        if(Physics.SphereCast(ray,maxInteractRadius, out RaycastHit hit, maxInteractDistance, interactableLayer))
+        {
+            UIManager.Instance.OnInteractionEnter();
+            interactableObj = hit.collider.GetComponent(typeof(IInteractable)) as IInteractable;
+        }
+        else
+        {
+            UIManager.Instance.OnInteractionExit();
         }
        
     }
 
-    public void OnInteract(IInteractable obj)
+    public void Interact()
     {
-        obj.Interact();
+        if (interactableObj != null)
+        {
+            interactableObj.Interact();
+        }
     }
+    
+    
+    
+    
+
    
     
       

@@ -23,7 +23,11 @@ public class InputManager : MonoBehaviour
     [SerializeField] private VirtualJoystick virtualJoystick;
     private Vector2 touchStartPos;
     private Vector2 touchEndPos;
-  
+
+    public void Update()
+    {
+        Debug.Log(Input.touchCount);
+    }
 
     public Vector2 GetNormalizedMoveDirection()
     {
@@ -33,9 +37,10 @@ public class InputManager : MonoBehaviour
 
     public Vector2 GetNormalizedRotationDirection()
     {
-       
-        if (Input.touchCount == 1  && virtualJoystick.IsDragging == false )
-        {
+
+        if (Input.touchCount >= 1)
+
+    {
             Touch touch = Input.GetTouch(0);
 
             if (touch.phase == TouchPhase.Moved && touch.position.x > Screen.width * 0.5f)

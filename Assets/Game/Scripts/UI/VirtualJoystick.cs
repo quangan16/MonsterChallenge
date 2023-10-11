@@ -29,7 +29,7 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler,IPointerDownHandler, 
         else
         {
           
-            // joystickHandlerImg.rectTransform.anchoredPosition = Vector2.zero;
+            joystickHandlerImg.rectTransform.anchoredPosition = Vector2.zero;
         }
         
         
