@@ -224,6 +224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isMoving: 0
   moveDirection: {x: 0, y: 0, z: 0}
+  rotationSpeed: 2
   cameraHolder: {fileID: 1025664073}
   playerRb: {fileID: 0}
   jumpButton: {fileID: 2040350363}
@@ -2706,6 +2707,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveDirection: {x: 0, y: 0, z: 0}
   virtualJoystick: {fileID: 661589592}
+  currentTouchRotateID: 0
 --- !u!4 &1848828085
 Transform:
   m_ObjectHideFlags: 0

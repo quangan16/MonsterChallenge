@@ -27,18 +27,19 @@ public class BatteryHolder : MonoBehaviour, IInteractable
     {
         if (GameManager.Instance.currentMission.missionType == MissionType.FILL_BATTERY)
         {
-            int i = 0;
-           
-                if (batterySlotsUsed[i]== false)
-                {
-                    Instantiate(batteryPrefab, batterySlots[i]);
-                    batterySlotsUsed[i] = true;
-                    batteryRequired--;
-                }
-                else
-                {
-                    i++;
-                }
+          
+           // if(PlayerManager.Instance.GetItemQuanityByType(B))
+           //     int i = 0;
+                // if (batterySlotsUsed[i]== false)
+                // {
+                //     Instantiate(batteryPrefab, batterySlots[i]);
+                //     batterySlotsUsed[i] = true;
+                //     batteryRequired--;
+                // }
+                // else
+                // {
+                //     i++;
+                // }
             
            
         }

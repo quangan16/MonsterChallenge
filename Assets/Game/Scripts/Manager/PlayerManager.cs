@@ -27,21 +27,36 @@ public class PlayerManager : MonoBehaviour
         if (item is BatteryItem )
         {
             batteryCollectedList.Push(item as BatteryItem);
-            Debug.Log(batteryCollectedList.Count);
+            DataManager.Instance.SaveBatteryData(batteryCollectedList.Count);
         }
         else{}
     }
 
-    public void RemoveItem()
+    public void RemoveAnItem()
     {
 
         batteryCollectedList.Pop();
+        DataManager.Instance.SaveBatteryData(batteryCollectedList.Count);
         
     }
 
-    public void RemoveAllItem()
+    public void RemoveAllItems()
     {
         batteryCollectedList.Clear();
     }
+
+    public int GetItemQuanityByType(ICollectable itemType)
+    {
+        int itemQuanity = -1;
+        if (itemType is BatteryItem)
+        {
+            itemQuanity = DataManager.Instance.LoadBatteryData();
+           
+        }
+
+        return itemQuanity;
+    }
+
+   
     
 }

@@ -24,9 +24,9 @@ public class DataManager : MonoBehaviour
         return PlayerPrefs.GetInt("NumberOfBatteries", 0);
     }
   
-    public void SaveBatteryData()
+    public void SaveBatteryData(int numberOfBatteries)
     {
-        PlayerPrefs.SetInt("NumberOfBatteries", PlayerManager.Instance.batteryCollectedList.Count);
+        PlayerPrefs.SetInt("NumberOfBatteries", numberOfBatteries);
         SaveData();
     }
 
@@ -37,9 +37,9 @@ public class DataManager : MonoBehaviour
         return GameManager.Instance.objectivesSO.GetMissionByIndex(currentMissionID);
     }
 
-    public void SaveCurrentMissionID()
+    public void SaveCurrentMissionID(int currentMissionID)
     {
-        PlayerPrefs.SetInt("CurrentMission", GameManager.Instance.currentMission.missionID);
+        PlayerPrefs.SetInt("CurrentMission", currentMissionID);
     }
 
     public void SaveData()

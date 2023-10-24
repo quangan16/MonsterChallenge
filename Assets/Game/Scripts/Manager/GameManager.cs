@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     {
         currentMission.missionID++;
         objectivesSO.SetActiveMissionByIndex(currentMission.missionID++);
-        DataManager.Instance.SaveCurrentMissionID();
+        DataManager.Instance.SaveCurrentMissionID(currentMission.missionID);
     }
         
 }

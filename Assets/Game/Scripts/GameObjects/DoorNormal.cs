@@ -9,12 +9,15 @@ using UnityEngine.UI;
 
 public class DoorNormal : Door
 {
-  
+    public void Awake()
+    {
+        doorType = DoorType.NORMAL;
+        doorState = DoorState.UNLOCKED_AND_CLOSED;
+    }
     public void Start()
     {
         base.Start();
-        doorType = DoorType.NORMAL;
-        doorState = DoorState.UNLOCKED_AND_CLOSED;
+       
     }
   
   

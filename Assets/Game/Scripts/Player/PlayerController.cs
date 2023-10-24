@@ -11,7 +11,10 @@ public class PlayerController : MonoBehaviour
     private float normalSpeed = 3.0f;
     private float sprintSpeed = 5.0f;
     public Vector3 moveDirection;
-    private float rotationSpeed = 5.0f;
+    private Vector2 touchStartPos;
+    private Vector2 touchEndPos;
+    [SerializeField] private float rotationSpeed = 100f;
+    // [SerializeField] private float rotationSpeed = 500.0f;
     private float upRotationBound = 70.0f;
     private float downRotationBound = -70.0f;
     private bool isSprinting = false;
@@ -61,10 +64,11 @@ public class PlayerController : MonoBehaviour
         moveDirection = new Vector3(InputManager.Instance.GetNormalizedMoveDirection().x, 0.0f,
             InputManager.Instance.GetNormalizedMoveDirection().y);
             isMoving = true;
-            Vector3 newMoveDirection = cameraHolder.transform.TransformDirection(moveDirection) ;
-           
+            Vector3 transformDirection = cameraHolder.transform.TransformDirection(moveDirection).normalized ;
+            Vector3 newMoveDirection = new Vector3(transformDirection.x, 0.0f, transformDirection.z);
+            Debug.Log(newMoveDirection);
             // playerRb.velocity = new Vector3(newMoveDirection.x, playerRb.velocity.y, newMoveDirection.z) ;
-            characterCtl.Move((newMoveDirection * currentSpeed * Time.deltaTime) + (new Vector3(0, verticalVelocity, 0) * Time.deltaTime) );
+            characterCtl.Move((newMoveDirection * currentSpeed * Time.deltaTime) + (new Vector3(0, verticalVelocity, 0) * Time.deltaTime));
     }
     
     public void LookAround()
@@ -73,30 +77,32 @@ public class PlayerController : MonoBehaviour
         {
             float newRotationY = cameraHolder.transform.eulerAngles.y +
                                  InputManager.Instance.GetNormalizedRotationDirection().x * rotationSpeed * Time.deltaTime;
-
+    
             float newRotationX = cameraHolder.transform.eulerAngles.x -
                                  InputManager.Instance.GetNormalizedRotationDirection().y * rotationSpeed *
                                  Time.deltaTime;
-
+    
             newRotationX = (newRotationX % 360 + 360) % 360;
             if (newRotationX > 180)
             {
                 newRotationX -= 360;
             }
-
+    
             newRotationX = Mathf.Clamp(newRotationX, downRotationBound, upRotationBound);
-            Quaternion targetRotation = Quaternion.Euler(newRotationX, newRotationY, 0);
-            
+            // Quaternion targetRotation = Quaternion.Euler(newRotationX, newRotationY, 0);
             // cameraHolder.transform.rotation =
             //     Quaternion.Slerp(cameraHolder.transform.rotation, targetRotation,
-            //         0.5f * rotationSpeed * Time.deltaTime);
+            //         0.9f * rotationSpeed * Time.deltaTime);
             transform.Rotate(Vector3.up * (InputManager.Instance.GetNormalizedRotationDirection().x * rotationSpeed * Time.deltaTime), Space.World);
-
+            
             cameraHolder.transform.localRotation = Quaternion.Euler(newRotationX, cameraHolder.transform.rotation.y, 0);
         }
      
        
     }
+
+    
+    
 
     public void ApplyGravity()
     {
@@ -112,12 +118,9 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
        
-        if (characterCtl.isGrounded == true)
+        if (characterCtl.isGrounded)
         {
-            // Calculate the jump velocity to achieve the desired jump height
             float jumpVelocity = Mathf.Sqrt(2 * jumpHeight * -gravity);
-    
-            // Set the vertical velocity to the jump velocity
             verticalVelocity = jumpVelocity;
             Debug.Log(verticalVelocity);
         }

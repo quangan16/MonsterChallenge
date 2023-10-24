@@ -9,12 +9,15 @@ using UnityEngine.UI;
 
 public class DoorBattery : Door
 {
-   
+    public void Awake()
+    {
+        doorType = DoorType.BATTERY;
+        doorState = DoorState.LOCKED;
+    }
     public void Start()
     {
         base.Start();
-        doorType = DoorType.BATTERY;
-        doorState = DoorState.LOCKED;
+       
     }
   
   
